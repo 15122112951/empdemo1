@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.mapper.EmpMapper">
+    <resultMap id="emps" type="com.neuedu.entity.Emp">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="sex" column="sex"/>
+        <result property="salary" column="salary"/>
+        <result property="dept_id" column="dept_id"/>
+        <association property="dept" javaType="com.neuedu.entity.Dept">
+            <id property="id" column="dept_id"/>
+            <result property="dname" column="dname"/>
+            <result property="location" column="location"/>
+        </association>
+        
+    </resultMap>
+    <select id="selectAll" resultMap="emps">
+        select o_emp.id id,name,phone,sex,salary,dept_id,dname,location from o_emp,o_dept where o_emp.dept_id = o_dept.id
+    </select>
+
+    <delete id="deleteOne">
+        delete from o_emp where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="saveOne" parameterType="com.neuedu.entity.Emp">
+        insert into o_emp (name,phone,sex,salary,dept_id) values (#{name},#{phone},#{sex},#{salary},#{dept_id});
+    </insert>
+</mapper>
